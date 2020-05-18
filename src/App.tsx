@@ -4,7 +4,8 @@ import { terrainGenerator } from './sketch';
 import p5 from 'p5';
 
 function App() {
-  const app = useRef();
+  let app = useRef<HTMLDivElement>(null);
+  // console.log(app);
 
   useEffect(() => {
     let newp5 = new p5(terrainGenerator, app.current);
@@ -14,7 +15,12 @@ function App() {
     };
   }, []);
 
-  return <div ref={app} className="App"></div>;
+  return (
+    <div>
+      <h1>HELLLLOOOOO</h1>
+      <div className="App" ref={app}></div>;
+    </div>
+  );
 }
 
 export default App;

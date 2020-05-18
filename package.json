@@ -37,7 +37,5 @@
       "last 1 safari version"
     ]
   },
-  "devDependencies": {
-    "@types/p5": "^0.9.0"
-  }
+  "devDependencies": {}
 }

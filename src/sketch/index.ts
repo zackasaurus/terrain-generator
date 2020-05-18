@@ -1,74 +1,67 @@
 export const terrainGenerator = (p) => {
-  let x = 100;
-  let y = 100;
+  // let x = 100;
+  // let y = 100;
+  var cols, rows;
+  var scl = 20;
+  var w = 2000;
+  var h = 1600;
 
-  // p.drawBackground = () => {
-  //   p.background(200);
-  // };
-  // p.setupPosition = () => {
-  //   x = p.windowWidth / 2;
-  //   y = p.windowHeight / 2;
-  // };
-  // p.windowResized = () => {
-  //   p.resizeCanvas(p.windowWidth, p.windowHeight);
-  //   p.drawBackground();
-  //   p.setupPosition();
-  // };
-  const w = 600;
-  const h = 600;
-  const scale = 20;
-  const cols = w / scale;
-  const rows = h / scale;
+  var flying = 0;
 
-  let terrain: number[][];
-
-  terrain = new Array(rows);
-  for (var i = 0; i < terrain.length; i++) {
-    terrain[i] = new Array(cols);
-  }
+  var terrain;
 
   p.setup = () => {
     p.createCanvas(600, 600, p.WEBGL);
-    // p.drawBackground();
-    // p.setupPosition();
-    for (let y = 0; y < rows; y++) {
-      for (let x = 0; x < cols; x++) {
-        console.log(x);
-        console.log(y);
-
-        terrain[x][y] = p.random(-10, 10);
-      }
-    }
+    cols = w / scl;
+    rows = h / scl;
+    terrain = create2DArray(cols, rows);
+    // console.log(terrain);
   };
 
   p.draw = () => {
-    p.rotateX(p.PI / 2.3);
-    p.translate(-w / 2, -h / 4, 0);
-    p.background(0);
-    p.stroke(255);
-    // p.fill(100);
-    // p.noFill();
-    // p.frameRate(1);
-    for (let y = 0; y < rows - 1; y++) {
-      p.beginShape(p);
-      for (let x = 0; x < cols; x++) {
-        // p.rect(x * scale, y * scale, scale, scale);
-        p.vertex(x * scale, y * scale, terrain[x][y]);
+    flying -= 0.005;
 
-        p.vertex(x * scale, (y + 1) * scale, terrain[x][y + 1]);
-        // p.vertex(x * scale, (y  1) * scale);
-        // p.vertex((x + 1) * scale, y * scale);
-        // p.vertex(x * scale, (y + 2) * scale);
+    var yoff = flying;
+    for (let y = 0; y < rows; y++) {
+      var xoff = 0;
+      for (let x = 0; x < cols; x++) {
+        // console.log(terrain[x]);
+        terrain[x][y] = p.map(p.noise(xoff, yoff), 0, 1, -100, 100);
+        xoff += 0.2;
+      }
+      yoff += 0.2;
+    }
+
+    // p.background(200, 200, 200, 200);
+    p.background(0);
+
+    p.stroke(255);
+
+    // translate(width / 2, height / 2);
+    // p.translate(0, 50);
+    p.rotateX(p.PI / 2.2);
+    p.fill(200, 200, 200, 255);
+
+    p.translate(-p.width, -p.height / 2 + 50);
+    for (let y = 0; y < rows - 1; y++) {
+      p.beginShape(p.TRIANGLE_STRIP);
+      for (let x = 0; x < cols; x++) {
+        p.vertex(x * scl, y * scl, terrain[x][y]);
+        p.vertex(x * scl, (y + 1) * scl, terrain[x][y + 1]);
+        // rect(x * scl, y * scl, scl, scl);
       }
       p.endShape();
     }
   };
 
-  // p.draw = () => {
-  //   p.background(0);
-  //   p.fill(200);
-  //   p.rect(x, y, 200, 200);
-  // };
+  function create2DArray(numArrays, numSubArrays) {
+    // console.log(numArrays);
+    var arr = new Array(numArrays);
+    for (var i = 0; i < numArrays; i++) {
+      arr[i] = new Array(numSubArrays);
+    }
+    return arr;
+  }
 };
 
 // let myp5 = new p5(s);
